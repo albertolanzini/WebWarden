@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "Productivity Tracker",
+    "name": "WebWarden",
     "version": "1.0",
     "description": "Tracks active time on each browser tab for productivity analysis and alerts the user when unproductive behavior occurs",
     "icons": {
@@ -9,10 +9,13 @@
     "background": {
       "service_worker": "background.js"
     },
+    "action": {
+      "default_popup": "popup/popup.html"
+    },
     "permissions": [
       "tabs",
       "activeTab",
       "storage"
     ]
-  }
+}
   

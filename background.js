@@ -4,7 +4,7 @@ let currentActivationTime = null;
 
 function updateActiveTime() {
     if (currentTabId !== null) {
-        browser.tabs.get(currentTabId).then(tab => {
+        chrome.tabs.get(currentTabId, function(tab) {
             const url = new URL(tab.url).hostname; // storing data by domain
             const now = Date.now();
             const timeSpent = now - currentActivationTime;
@@ -19,14 +19,14 @@ function updateActiveTime() {
             currentActivationTime = now;
 
             // Optionally, you can persist the data here or do it periodically
-            browser.storage.local.set({ activeTimes: activeTimes });
+            chrome.storage.local.set({ activeTimes: activeTimes });
 
             console.log(activeTimes);
         });
     }
 }
 
-browser.tabs.onActivated.addListener(activeInfo => {
+chrome.tabs.onActivated.addListener(activeInfo => {
     // Update time for the tab that was just deactivated
     updateActiveTime();
 
@@ -36,8 +36,8 @@ browser.tabs.onActivated.addListener(activeInfo => {
 });
 
 // Handling window focus changes
-browser.windows.onFocusChanged.addListener(windowId => {
-    if (windowId === browser.windows.WINDOW_ID_NONE) {
+chrome.windows.onFocusChanged.addListener(windowId => {
+    if (windowId === chrome.windows.WINDOW_ID_NONE) {
         // Browser lost focus, update time for the current tab
         updateActiveTime();
     } else {
@@ -47,7 +47,7 @@ browser.windows.onFocusChanged.addListener(windowId => {
 });
 
 // On startup, load saved data
-browser.storage.local.get("activeTimes").then(data => {
+chrome.storage.local.get("activeTimes", function(data) {
     if (data.activeTimes) {
         activeTimes = data.activeTimes;
     }
